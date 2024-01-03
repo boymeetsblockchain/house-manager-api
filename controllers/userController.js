@@ -36,9 +36,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Set HTTP-only cookie
   res.cookie("token", token, {
-    httpOnly: true,
+    httpOnly: false,
     secure:true,
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
@@ -75,9 +75,9 @@ const loginUser = asyncHandler(async(req,res)=>{
     const token = jwt.sign({userId:user._id},process.env.JWT_SECRET,{expiresIn:"30d"})
 
     res.cookie("token", token,{
-      httpOnly:true,
+      httpOnly:false,
       secure: true,
-      sameSite:"strict",
+      sameSite:"none",
       maxAge: 30 *24 *60 *60 *1000
     })
     res.json({
