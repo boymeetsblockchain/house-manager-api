@@ -10,8 +10,11 @@ const cors = require("cors")
 
 
 const app = express()
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
-  
+
+const allowedOrigins = ['http://localhost:3000', 'https://house-manager-client.vercel.app'];
+
+app.use(cors({ credentials: true, origin: allowedOrigins }));
+
 
 // middlewares
 app.use(express.json())
