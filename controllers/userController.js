@@ -71,6 +71,10 @@ const loginUser = asyncHandler(async(req,res)=>{
 
   const passwordIsCorrect = await bcrypt.compare(password,user.password)
 
+  if(!passwordIsCorrect){
+    res.status(401)
+    throw new Error ("User not Found")
+  }
   if(user && passwordIsCorrect){
     const token = jwt.sign({userId:user._id},process.env.JWT_SECRET,{expiresIn:"30d"})
 

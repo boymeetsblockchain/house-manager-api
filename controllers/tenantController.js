@@ -49,7 +49,7 @@ const addTenant = asyncHandler(async (req, res) => {
     console.error("Error adding tenant:", error);
     res.status(500).json({
       success: false,
-      error: "Error adding tenant",
+      error: error,
     });
     throw new Error ("Error adding tenant")
   }
