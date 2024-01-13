@@ -33,6 +33,18 @@ const tenantSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  apartmentLocation:{
+    type: String,
+    required: true
+  },
+  cautionFee:{
+    type:Boolean,
+    default:false
+  },
+  source:{
+    type: String,
+    required: true
+  },
   guarantor: {
     guarantorname: { type: String, required: true },
     guarantoraddress: { type: String, required: true },
