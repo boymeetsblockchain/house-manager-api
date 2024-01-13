@@ -25,6 +25,10 @@ const tenantSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  duration :{
+    type: Number,
+    required: true
+  },
   employadd: {
     type: String,
     required: true

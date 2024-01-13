@@ -19,7 +19,8 @@ const addTenant = asyncHandler(async (req, res) => {
     rentend,
     source,
     cautionFee,
-    apartmentLocation
+    apartmentLocation,
+    duration
   } = req.body;
 
   try {
@@ -34,6 +35,7 @@ const addTenant = asyncHandler(async (req, res) => {
       employadd,
       cautionFee,
       source,
+      duration,
       apartmentLocation,
       paymentmethod,
       guarantor: {
