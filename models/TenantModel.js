@@ -18,7 +18,7 @@ const tenantSchema = new mongoose.Schema({
     required: true
   },
   occupation: {
-    type: String, // Adjust this based on your requirements
+    type: String, 
     required: true
   },
   altphone: {
@@ -43,7 +43,6 @@ const tenantSchema = new mongoose.Schema({
   },
   cautionFee:{
     type:Boolean,
-    default:false
   },
   source:{
     type: String,
@@ -57,6 +56,9 @@ const tenantSchema = new mongoose.Schema({
   rent: {
     rentstart: { type: Date, required: true },
     rentend: { type: Date, required: true }
+  },
+  imageUrl:{
+    type: String,
   }
 },
 {
