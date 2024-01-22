@@ -20,7 +20,8 @@ const addTenant = asyncHandler(async (req, res) => {
     source,
     cautionFee,
     apartmentLocation,
-    duration
+    duration,
+    imageUrl
   } = req.body;
 
   try {
@@ -47,6 +48,7 @@ const addTenant = asyncHandler(async (req, res) => {
         rentstart,
         rentend,
       },
+      imageUrl
     });
 
     res.status(201).json({
