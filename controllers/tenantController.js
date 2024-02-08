@@ -106,7 +106,8 @@ const deleteTenant = asyncHandler(async (req, res) => {
 
 
 const editTenant = asyncHandler(async (req, res) => {
-  const { id } = req.params; // Assuming tenantId is part of the route params
+  const { id :tenantId} = req.params;
+  console.log(tenantId)
   const {
     name,
     address,
@@ -120,6 +121,7 @@ const editTenant = asyncHandler(async (req, res) => {
     guarantornumber,
     rentstart,
     rentend,
+    imageUrl
   } = req.body;
 
   try {
@@ -141,6 +143,7 @@ const editTenant = asyncHandler(async (req, res) => {
     existingTenant.occupation = occupation || existingTenant.occupation;
     existingTenant.altphone = altphone || existingTenant.altphone;
     existingTenant.employadd = employadd || existingTenant.employadd;
+    existingTenant.imageUrl = imageUrl|| existingTenant.imageUrl;
     existingTenant.paymentmethod = paymentmethod || existingTenant.paymentmethod;
     existingTenant.guarantor = {
       guarantorname: guarantorname || existingTenant.guarantor.guarantorname,
