@@ -9,8 +9,7 @@ const tenantSchema = new mongoose.Schema({
   },
   amount :{
     type:String,
-    required:true
-  },
+      },
   phonenumber: {
     type: Number,
   },
@@ -39,13 +38,13 @@ const tenantSchema = new mongoose.Schema({
     type: String,
   },
   guarantor: {
-    guarantorname: { type: String, required: true },
-    guarantoraddress: { type: String, required: true },
-    guarantornumber: { type: Number, required: true }
+    guarantorname: { type: String,  },
+    guarantoraddress: { type: String,  },
+    guarantornumber: { type: Number,  }
   },
   rent: {
-    rentstart: { type: Date, required: true },
-    rentend: { type: Date, required: true }
+    rentstart: { type: Date,  },
+    rentend: { type: Date,  }
   },
   imageUrl:{
     type: String,
