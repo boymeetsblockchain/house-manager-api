@@ -3,11 +3,9 @@ const mongoose = require("mongoose");
 const tenantSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
   },
   address: {
     type: String,
-    required: true
   },
   amount :{
     type:String,
@@ -15,38 +13,30 @@ const tenantSchema = new mongoose.Schema({
   },
   phonenumber: {
     type: Number,
-    required: true
   },
   occupation: {
     type: String, 
-    required: true
   },
   altphone: {
     type: Number,
-    required: true
   },
   duration :{
     type: String,
-    required: true
   },
   employadd: {
     type: String,
-    required: true
   },
   paymentmethod: {
     type: String,
-    required: true
   },
   apartmentLocation:{
     type: String,
-    required: true
   },
   cautionFee:{
     type:Boolean,
   },
   source:{
     type: String,
-    required: true
   },
   guarantor: {
     guarantorname: { type: String, required: true },
