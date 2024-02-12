@@ -28,6 +28,12 @@ const tenantSchema = new mongoose.Schema({
   paymentmethod: {
     type: String,
   },
+  paymenttype: {
+    type: String,
+  },
+  comment: {
+    type: String,
+  },
   apartmentLocation:{
     type: String,
   },

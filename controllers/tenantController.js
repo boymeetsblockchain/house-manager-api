@@ -21,7 +21,9 @@ const addTenant = asyncHandler(async (req, res) => {
     cautionFee,
     apartmentLocation,
     duration,
-    imageUrl
+    imageUrl,
+    comment,
+    paymenttype
   } = req.body;
 
   try {
@@ -39,6 +41,8 @@ const addTenant = asyncHandler(async (req, res) => {
       duration,
       apartmentLocation,
       paymentmethod,
+      paymenttype,
+      comment,
       guarantor: {
         guarantorname,
         guarantoraddress,
@@ -121,7 +125,9 @@ const editTenant = asyncHandler(async (req, res) => {
     guarantornumber,
     rentstart,
     rentend,
-    imageUrl
+    imageUrl,
+    comment,
+    paymenttype
   } = req.body;
 
   try {
@@ -145,6 +151,8 @@ const editTenant = asyncHandler(async (req, res) => {
     existingTenant.employadd = employadd || existingTenant.employadd;
     existingTenant.imageUrl = imageUrl|| existingTenant.imageUrl;
     existingTenant.paymentmethod = paymentmethod || existingTenant.paymentmethod;
+    existingTenant.paymenttype =paymenttype || existingTenant.paymenttype;
+    existingTenant.comment = comment || existingTenant.comment;
     existingTenant.guarantor = {
       guarantorname: guarantorname || existingTenant.guarantor.guarantorname,
       guarantoraddress: guarantoraddress || existingTenant.guarantor.guarantoraddress,
