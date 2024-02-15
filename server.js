@@ -11,7 +11,7 @@ const cors = require("cors")
 
 const app = express()
 
-const allowedOrigins = ['http://localhost:3000', 'https://house-manager-client.vercel.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://house-manager-client.vercel.app', 'https://www.profokesfunctionsenhancementventurestenants.com.ng'];
 
 app.use(cors({ credentials: true, origin: allowedOrigins }));
 
