@@ -10,6 +10,7 @@ const addTenant = asyncHandler(async (req, res) => {
     amount,
     occupation,
     altphone,
+    altphonetwo,
     employadd,
     paymentmethod,
     guarantorname,
@@ -35,6 +36,7 @@ const addTenant = asyncHandler(async (req, res) => {
       occupation,
       amount,
       altphone,
+      altphonetwo,
       employadd,
       cautionFee,
       source,
@@ -118,6 +120,7 @@ const editTenant = asyncHandler(async (req, res) => {
     phonenumber,
     occupation,
     altphone,
+    altphonetwo,
     employadd,
     paymentmethod,
     guarantorname,
@@ -148,6 +151,7 @@ const editTenant = asyncHandler(async (req, res) => {
     existingTenant.phonenumber = phonenumber || existingTenant.phonenumber;
     existingTenant.occupation = occupation || existingTenant.occupation;
     existingTenant.altphone = altphone || existingTenant.altphone;
+    existingTenant.altphonetwo = altphonetwo || existingTenant.altphonetwo;
     existingTenant.employadd = employadd || existingTenant.employadd;
     existingTenant.imageUrl = imageUrl|| existingTenant.imageUrl;
     existingTenant.paymentmethod = paymentmethod || existingTenant.paymentmethod;

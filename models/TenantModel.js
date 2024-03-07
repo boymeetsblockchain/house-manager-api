@@ -16,7 +16,11 @@ const tenantSchema = new mongoose.Schema({
   occupation: {
     type: String, 
   },
+
   altphone: {
+    type: Number,
+  },
+  altphonetwo: {
     type: Number,
   },
   duration :{
