@@ -1,67 +1,90 @@
 const mongoose = require("mongoose");
 
-const tenantSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  amount :{
-    type:String,
-      },
-  phonenumber: {
+const paymentSchema = new mongoose.Schema({
+  amountPaid: {
     type: Number,
+    required: true,
   },
-  occupation: {
-    type: String, 
+  paymentDate: {
+    type: Date,
+    default: Date.now,
   },
-
-  altphone: {
-    type: Number,
-  },
-  altphonetwo: {
-    type: Number,
-  },
-  duration :{
+  paymentMethod: {
     type: String,
-  },
-  employadd: {
-    type: String,
-  },
-  paymentmethod: {
-    type: String,
-  },
-  paymenttype: {
-    type: String,
+    required: true,
   },
   comment: {
     type: String,
   },
-  apartmentLocation:{
+  receiptUrl: {
     type: String,
   },
-  cautionFee:{
-    type:Boolean,
-  },
-  source:{
-    type: String,
-  },
-  guarantor: {
-    guarantorname: { type: String,  },
-    guarantoraddress: { type: String,  },
-    guarantornumber: { type: Number,  }
-  },
-  rent: {
-    rentstart: { type: Date,  },
-    rentend: { type: Date,  }
-  },
-  imageUrl:{
-    type: String,
-  }
-},
-{
-  timestamps: true
 });
 
-module.exports = mongoose.model('Tenant', tenantSchema);
+const tenantSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    amount: {
+      type: String,
+    },
+    phonenumber: {
+      type: Number,
+    },
+    occupation: {
+      type: String,
+    },
+    altphone: {
+      type: Number,
+    },
+    altphonetwo: {
+      type: Number,
+    },
+    duration: {
+      type: String,
+    },
+    employadd: {
+      type: String,
+    },
+    paymentmethod: {
+      type: String,
+    },
+    paymenttype: {
+      type: String,
+    },
+    comment: {
+      type: String,
+    },
+    apartmentLocation: {
+      type: String,
+    },
+    cautionFee: {
+      type: Boolean,
+    },
+    source: {
+      type: String,
+    },
+    guarantor: {
+      guarantorname: { type: String },
+      guarantoraddress: { type: String },
+      guarantornumber: { type: Number },
+    },
+    rent: {
+      rentstart: { type: Date },
+      rentend: { type: Date },
+    },
+    payments: [paymentSchema],
+    imageUrl: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+module.exports = mongoose.model("Tenant", tenantSchema);

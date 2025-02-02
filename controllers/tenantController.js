@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const Tenant = require("../models/TenantModel");
 
 const addTenant = asyncHandler(async (req, res) => {
-  // Assuming the request body contains the tenant data
   const {
     name,
     address,
@@ -24,11 +23,10 @@ const addTenant = asyncHandler(async (req, res) => {
     duration,
     imageUrl,
     comment,
-    paymenttype
+    paymenttype,
   } = req.body;
 
   try {
-    // Create a new tenant using the Tenant model
     const newTenant = await Tenant.create({
       name,
       address,
@@ -54,7 +52,16 @@ const addTenant = asyncHandler(async (req, res) => {
         rentstart,
         rentend,
       },
-      imageUrl
+      imageUrl,
+      payments: [
+        {
+          amountPaid: amount,
+          paymentDate: new Date(),
+          paymentMethod: paymentmethod,
+          comment: comment,
+          receiptUrl: imageUrl,
+        },
+      ],
     });
 
     res.status(201).json({
@@ -65,55 +72,47 @@ const addTenant = asyncHandler(async (req, res) => {
     console.error("Error adding tenant:", error);
     res.status(500).json({
       success: false,
-      error: error,
+      error: "Error adding tenant",
     });
-    throw new Error ("Error adding tenant")
   }
 });
 
-
 const getAllTenants = asyncHandler(async (req, res) => {
   try {
-    // Fetch all tenants from the Tenant model
     const tenants = await Tenant.find();
-
-    res.status(200).json({tenants});
+    res.status(200).json({ tenants });
   } catch (error) {
     console.error("Error fetching tenants:", error);
     res.status(500).json({
       success: false,
       error: "Error fetching tenants",
     });
-    throw new Error("Error fetching tenants");
   }
 });
 
-const getTenant = asyncHandler(async(req,res)=>{
+const getTenant = asyncHandler(async (req, res) => {
   const tenant = await Tenant.findById(req.params.id);
   if (tenant) {
     return res.json(tenant);
   } else {
-    
     res.status(404);
-    throw new Error('Tenant not found');
+    throw new Error("Tenant not found");
   }
-})
+});
+
 const deleteTenant = asyncHandler(async (req, res) => {
   const tenant = await Tenant.findByIdAndDelete(req.params.id);
 
   if (tenant) {
-    res.json({ success: true, message: 'Tenant deleted successfully' });
+    res.json({ success: true, message: "Tenant deleted successfully" });
   } else {
     res.status(404);
-    throw new Error('Tenant not found');
+    throw new Error("Tenant not found");
   }
 });
 
-
-
 const editTenant = asyncHandler(async (req, res) => {
-  const { id :tenantId} = req.params;
-  console.log(tenantId)
+  const { id: tenantId } = req.params;
   const {
     name,
     address,
@@ -130,22 +129,18 @@ const editTenant = asyncHandler(async (req, res) => {
     rentend,
     imageUrl,
     comment,
-    paymenttype
+    paymenttype,
   } = req.body;
 
   try {
-    // Find the tenant by ID
     const existingTenant = await Tenant.findById(tenantId);
 
     if (!existingTenant) {
-      res.status(404).json({
-        success: false,
-        error: "Tenant not found",
-      });
-      return;
+      return res
+        .status(404)
+        .json({ success: false, error: "Tenant not found" });
     }
 
-    // Update the tenant's fields
     existingTenant.name = name || existingTenant.name;
     existingTenant.address = address || existingTenant.address;
     existingTenant.phonenumber = phonenumber || existingTenant.phonenumber;
@@ -153,21 +148,23 @@ const editTenant = asyncHandler(async (req, res) => {
     existingTenant.altphone = altphone || existingTenant.altphone;
     existingTenant.altphonetwo = altphonetwo || existingTenant.altphonetwo;
     existingTenant.employadd = employadd || existingTenant.employadd;
-    existingTenant.imageUrl = imageUrl|| existingTenant.imageUrl;
-    existingTenant.paymentmethod = paymentmethod || existingTenant.paymentmethod;
-    existingTenant.paymenttype =paymenttype || existingTenant.paymenttype;
+    existingTenant.imageUrl = imageUrl || existingTenant.imageUrl;
+    existingTenant.paymentmethod =
+      paymentmethod || existingTenant.paymentmethod;
+    existingTenant.paymenttype = paymenttype || existingTenant.paymenttype;
     existingTenant.comment = comment || existingTenant.comment;
     existingTenant.guarantor = {
       guarantorname: guarantorname || existingTenant.guarantor.guarantorname,
-      guarantoraddress: guarantoraddress || existingTenant.guarantor.guarantoraddress,
-      guarantornumber: guarantornumber || existingTenant.guarantor.guarantornumber,
+      guarantoraddress:
+        guarantoraddress || existingTenant.guarantor.guarantoraddress,
+      guarantornumber:
+        guarantornumber || existingTenant.guarantor.guarantornumber,
     };
     existingTenant.rent = {
       rentstart: rentstart || existingTenant.rent.rentstart,
       rentend: rentend || existingTenant.rent.rentend,
     };
 
-    // Save the updated tenant
     const updatedTenant = await existingTenant.save();
 
     res.status(200).json({
@@ -183,12 +180,59 @@ const editTenant = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * Renew Rent for a Tenant
+ * Adds a new payment record and updates rent dates.
+ */
+const renewRent = asyncHandler(async (req, res) => {
+  const { id: tenantId } = req.params;
+  const { rentstart, rentend, amount, paymentMethod, comment, receiptUrl } =
+    req.body;
 
+  try {
+    const tenant = await Tenant.findById(tenantId);
+
+    if (!tenant) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Tenant not found" });
+    }
+
+    // Update rent details
+    tenant.rent.rentstart = rentstart || tenant.rent.rentstart;
+    tenant.rent.rentend = rentend || tenant.rent.rentend;
+    tenant.amount = amount || tenant.amount;
+
+    // Add new payment record
+    tenant.payments.push({
+      amountPaid: amount,
+      paymentDate: new Date(),
+      paymentMethod: paymentMethod || tenant.paymentmethod,
+      comment,
+      receiptUrl,
+    });
+
+    const updatedTenant = await tenant.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Rent renewed successfully",
+      data: updatedTenant,
+    });
+  } catch (error) {
+    console.error("Error renewing rent:", error);
+    res.status(500).json({
+      success: false,
+      error: "Error renewing rent",
+    });
+  }
+});
 
 module.exports = {
   addTenant,
   getAllTenants,
   getTenant,
   deleteTenant,
-  editTenant
-}
+  editTenant,
+  renewRent,
+};
