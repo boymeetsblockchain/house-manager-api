@@ -228,6 +228,31 @@ const renewRent = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteSinglePayment = asyncHandler(async (req, res) => {
+  const { tenantId, paymentId } = req.params;
+
+  try {
+    // Find the tenant and remove the specific payment from the array
+    const updatedTenant = await Tenant.findByIdAndUpdate(
+      tenantId,
+      { $pull: { payments: { _id: paymentId } } }, // Remove the specific payment
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTenant) {
+      return res.status(404).json({ message: "Tenant not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Payment deleted successfully", tenant: updatedTenant });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+module.exports = { deleteSinglePayment };
+
 module.exports = {
   addTenant,
   getAllTenants,
@@ -235,4 +260,5 @@ module.exports = {
   deleteTenant,
   editTenant,
   renewRent,
+  deleteSinglePayment,
 };
