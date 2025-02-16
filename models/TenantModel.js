@@ -64,9 +64,14 @@ const tenantSchema = new mongoose.Schema(
     cautionFee: {
       type: Boolean,
     },
+    hasExpired: {
+      type: Boolean,
+      default: false,
+    },
     source: {
       type: String,
     },
+
     guarantor: {
       guarantorname: { type: String },
       guarantoraddress: { type: String },

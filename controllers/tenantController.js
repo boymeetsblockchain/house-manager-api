@@ -180,10 +180,6 @@ const editTenant = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * Renew Rent for a Tenant
- * Adds a new payment record and updates rent dates.
- */
 const renewRent = asyncHandler(async (req, res) => {
   const { id: tenantId } = req.params;
   const { rentstart, rentend, amount, paymentMethod, comment, receiptUrl } =
@@ -232,11 +228,10 @@ const deleteSinglePayment = asyncHandler(async (req, res) => {
   const { tenantId, paymentId } = req.params;
 
   try {
-    // Find the tenant and remove the specific payment from the array
     const updatedTenant = await Tenant.findByIdAndUpdate(
       tenantId,
-      { $pull: { payments: { _id: paymentId } } }, // Remove the specific payment
-      { new: true } // Return the updated document
+      { $pull: { payments: { _id: paymentId } } },
+      { new: true }
     );
 
     if (!updatedTenant) {
@@ -251,7 +246,20 @@ const deleteSinglePayment = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { deleteSinglePayment };
+const toggleActive = asyncHandler(async (req, res) => {
+  const { id: tenantId } = req.params;
+  if (!tenantId) {
+    return res.status(400).json({ message: "Tenant ID is required" });
+  }
+  try {
+    const findtenantandUpdate = await Tenant.findByIdAndUpdate(tenantId, {
+      hasExpired: true,
+    });
+    res.status(200).json({ message: "Tenant updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 module.exports = {
   addTenant,
@@ -261,4 +269,5 @@ module.exports = {
   editTenant,
   renewRent,
   deleteSinglePayment,
+  toggleActive,
 };
