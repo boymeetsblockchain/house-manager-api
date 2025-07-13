@@ -64,6 +64,9 @@ const tenantSchema = new mongoose.Schema(
     cautionFee: {
       type: Boolean,
     },
+    cautionFeePaid: {
+      type: Number,
+    },
     hasExpired: {
       type: Boolean,
       default: false,
@@ -76,6 +79,7 @@ const tenantSchema = new mongoose.Schema(
       guarantorname: { type: String },
       guarantoraddress: { type: String },
       guarantornumber: { type: Number },
+      guarantorrelationship: { type: String },
     },
     rent: {
       rentstart: { type: Date },
