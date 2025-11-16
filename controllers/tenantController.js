@@ -17,6 +17,8 @@ const addTenant = asyncHandler(async (req, res) => {
     guarantornumber,
     guarantorrelationship,
     cautionFeePaid,
+    cautionFeeComment,
+    cautionFeeDate,
     rentstart,
     rentend,
     source,
@@ -26,6 +28,7 @@ const addTenant = asyncHandler(async (req, res) => {
     imageUrl,
     comment,
     paymenttype,
+    utilities,
   } = req.body;
 
   try {
@@ -40,6 +43,8 @@ const addTenant = asyncHandler(async (req, res) => {
       employadd,
       cautionFee,
       cautionFeePaid,
+      cautionFeeComment,
+      cautionFeeDate,
       source,
       duration,
       apartmentLocation,
@@ -66,6 +71,7 @@ const addTenant = asyncHandler(async (req, res) => {
           receiptUrl: imageUrl,
         },
       ],
+      utilities: utilities || [],
     });
 
     res.status(201).json({
@@ -129,6 +135,10 @@ const editTenant = asyncHandler(async (req, res) => {
     guarantorname,
     guarantoraddress,
     guarantornumber,
+    guarantorrelationship,
+    cautionFeePaid,
+    cautionFeeComment,
+    cautionFeeDate,
     rentstart,
     rentend,
     imageUrl,
@@ -157,12 +167,22 @@ const editTenant = asyncHandler(async (req, res) => {
       paymentmethod || existingTenant.paymentmethod;
     existingTenant.paymenttype = paymenttype || existingTenant.paymenttype;
     existingTenant.comment = comment || existingTenant.comment;
+    existingTenant.cautionFeePaid =
+      cautionFeePaid !== undefined
+        ? cautionFeePaid
+        : existingTenant.cautionFeePaid;
+    existingTenant.cautionFeeComment =
+      cautionFeeComment || existingTenant.cautionFeeComment;
+    existingTenant.cautionFeeDate =
+      cautionFeeDate || existingTenant.cautionFeeDate;
     existingTenant.guarantor = {
       guarantorname: guarantorname || existingTenant.guarantor.guarantorname,
       guarantoraddress:
         guarantoraddress || existingTenant.guarantor.guarantoraddress,
       guarantornumber:
         guarantornumber || existingTenant.guarantor.guarantornumber,
+      guarantorrelationship:
+        guarantorrelationship || existingTenant.guarantor.guarantorrelationship,
     };
     existingTenant.rent = {
       rentstart: rentstart || existingTenant.rent.rentstart,
@@ -265,6 +285,65 @@ const toggleActive = asyncHandler(async (req, res) => {
   }
 });
 
+// Add utility payment to tenant
+const addUtilityPayment = asyncHandler(async (req, res) => {
+  const { id: tenantId } = req.params;
+  const { name, amountPaid, datePaid } = req.body;
+
+  try {
+    const tenant = await Tenant.findById(tenantId);
+
+    if (!tenant) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Tenant not found" });
+    }
+
+    tenant.utilities.push({
+      name,
+      amountPaid,
+      datePaid: datePaid || new Date(),
+    });
+
+    const updatedTenant = await tenant.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Utility payment added successfully",
+      data: updatedTenant,
+    });
+  } catch (error) {
+    console.error("Error adding utility payment:", error);
+    res.status(500).json({
+      success: false,
+      error: "Error adding utility payment",
+    });
+  }
+});
+
+const deleteUtilityPayment = asyncHandler(async (req, res) => {
+  const { tenantId, utilityId } = req.params;
+
+  try {
+    const updatedTenant = await Tenant.findByIdAndUpdate(
+      tenantId,
+      { $pull: { utilities: { _id: utilityId } } },
+      { new: true }
+    );
+
+    if (!updatedTenant) {
+      return res.status(404).json({ message: "Tenant not found" });
+    }
+
+    res.status(200).json({
+      message: "Utility payment deleted successfully",
+      tenant: updatedTenant,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 module.exports = {
   addTenant,
   getAllTenants,
@@ -274,4 +353,6 @@ module.exports = {
   renewRent,
   deleteSinglePayment,
   toggleActive,
+  addUtilityPayment,
+  deleteUtilityPayment,
 };

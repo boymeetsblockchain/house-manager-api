@@ -20,6 +20,20 @@ const paymentSchema = new mongoose.Schema({
   },
 });
 
+const utilitySchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  amountPaid: {
+    type: Number,
+    required: true,
+  },
+  datePaid: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const tenantSchema = new mongoose.Schema(
   {
     name: {
@@ -64,8 +78,15 @@ const tenantSchema = new mongoose.Schema(
     cautionFee: {
       type: Boolean,
     },
+
     cautionFeePaid: {
       type: Number,
+    },
+    cautionFeeComment: {
+      type: String,
+    },
+    cautionFeeDate: {
+      type: String,
     },
     hasExpired: {
       type: Boolean,
@@ -86,6 +107,7 @@ const tenantSchema = new mongoose.Schema(
       rentend: { type: Date },
     },
     payments: [paymentSchema],
+    utilities: [utilitySchema],
     imageUrl: {
       type: String,
     },
